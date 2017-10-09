@@ -83,11 +83,14 @@ int main(int argc, char *argv[])
 				if(fork() == 0) {
 					fprintf(stdout, "Connection established\n");
 					recv(client, buffer, 1024, 0);
-					printf(buffer);
-					//printf("%d\n", client_address);
-					if(buffer)
+					if(strncasecmp(buffer, "GET", 3) == 0) {
 						write(client, html, sizeof(html)-1);
-						printf("Shutting down...\n");
+					} else if(strncasecmp(buffer, "POST", 4) == 0) {
+						printf("POST request\n");
+					} else if(strncasecmp(buffer, "HEAD", 4) == 0) {
+						printf("HEAD request\n");
+					}
+					printf("Shutting down...\n");
 					shutdown(client, SHUT_RDWR);
 					close(client);
 					exit(0);	
